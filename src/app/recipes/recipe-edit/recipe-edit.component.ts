@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Params} from '@angular/router';
+import {FormGroup, FormControl,FormArray} from '@angular/forms';
+import { RecipeService } from '../recipe.service';
+import { Recipe } from '../recipe.model';
+
+
 
 @Component({
   selector: 'app-recipe-edit',
@@ -9,15 +14,58 @@ import {ActivatedRoute, Params} from '@angular/router';
 export class RecipeEditComponent implements OnInit {
    id: number;
     editMode = false;
-  constructor(private route: ActivatedRoute) { }
+    recipeForm: FormGroup;
+
+  constructor(private route: ActivatedRoute,
+  private recipeService: RecipeService ) { }
 
   ngOnInit() {
     this.route.params.subscribe(
       (params: Params) => {
         this.id = +params['id'];
         this.editMode = params['id'] != null ; // checkingin which mode we are edit mode or new mode
+        this.initForm();
       }
     );
+  }
+onSubmit(){
+  console.log(this.recipeForm);
+}
+
+get controls() {
+  return (this.recipeForm.get('ingredients') as FormArray).controls;
+}
+
+  private initForm(){
+  
+    let recipeName= '';
+    let recipeImagePath = '';
+    let recipeDescription = '';
+    let recipeIngredient = new FormArray([]);
+
+    if (this.editMode){
+      const recipe = this.recipeService.getRecipe(this.id)
+      recipeName = recipe.name;
+      recipeImagePath = recipe.imagePath;
+      recipeDescription = recipe.description;
+      if(recipe['ignredients']) {
+          for(let ingredient of recipe.ingredients){
+            recipeIngredient.push(
+               new FormGroup({
+              'name': new FormControl(ingredient.name),
+              'amount': new FormControl(ingredient.amount)
+               })
+
+          )
+          }
+      }
+    }
+      this.recipeForm = new FormGroup({
+          'name': new FormControl(recipeName),
+          'imagePath' : new FormControl(recipeImagePath),
+          'description': new FormControl(recipeDescription),
+          'ingredients':recipeIngredient
+      });
   }
 
 }

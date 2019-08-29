@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-12">
-    <form >
+    <form [formGroup]="recipeForm"  (ngSubmit)="onSubmit()">
       <div class="row">
         <div class="col-xs-12">
           <button
@@ -17,7 +17,7 @@
             <input
               type="text"
               id="name"
-              formControlName="name"
+             formControlName="name"
               class="form-control">
           </div>
         </div>
@@ -29,7 +29,7 @@
             <input
               type="text"
               id="imagePath"
-              formControlName="imagePath"
+               formControlName="imagePath"
               class="form-control"
               #imagePath>
           </div>
@@ -48,7 +48,7 @@
               type="text"
               id="description"
               class="form-control"
-              formControlName="description"
+               formControlName="description"
               rows="6"></textarea>
           </div>
         </div>
@@ -56,7 +56,10 @@
       <div class="row">
         <div class="col-xs-12" formArrayName="ingredients">
           <div
-            class="row">
+            class="row"
+            *ngFor="*ngFor="let ingredientCtrl of controls; let i = index""
+            [formGroupName]="i"
+            style="margin-top: 10px;">
             <div class="col-xs-8">
               <input
                 type="text"
@@ -73,7 +76,7 @@
               <button
                 type="button"
                 class="btn btn-danger"
-                >X</button>
+                (click)="onDeleteIngredient(i)">X</button>
             </div>
           </div>
           <hr>
@@ -82,7 +85,7 @@
               <button
                 type="button"
                 class="btn btn-success"
-                >Add Ingredient</button>
+                (click)="onAddIngredient()">Add Ingredient</button>
             </div>
           </div>
         </div>
