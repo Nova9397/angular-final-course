@@ -6,8 +6,9 @@
           <button
             type="submit"
             class="btn btn-success"
-           >Submit</button>
-          <button type="button" class="btn btn-danger" >Cancel</button>
+            [disabled]="!recipeForm.valid"
+           >Save</button>
+          <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
         </div>
       </div>
       <div class="row">
@@ -53,11 +54,11 @@
           </div>
         </div>
       </div>
-      <div class="row">
+     <div class="row">
         <div class="col-xs-12" formArrayName="ingredients">
           <div
             class="row"
-            *ngFor="*ngFor="let ingredientCtrl of controls; let i = index""
+            *ngFor="let ingredientCtrl of recipeForm.get('ingredients').controls; let i = index"
             [formGroupName]="i"
             style="margin-top: 10px;">
             <div class="col-xs-8">
